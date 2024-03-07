@@ -1,11 +1,13 @@
 import { StatusBar } from "expo-status-bar";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
+import { PokemonTable } from "./src/components/PokemonTable";
 
 export default function App() {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <PokemonTable />
       <StatusBar style="auto" />
-    </View>
+    </SafeAreaView>
   );
 }
 
