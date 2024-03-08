@@ -1,8 +1,16 @@
 import React from "react";
-import { View, Text, ActivityIndicator, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  Image,
+  StyleSheet,
+  Pressable,
+} from "react-native";
 import { useQuery } from "../hooks/useQuery";
 import { PolemonTypes } from "./PokemonTypes";
 import { Pokemon } from "../types";
+import { Link } from "expo-router";
 
 interface Props {
   name: string;
@@ -25,22 +33,30 @@ export function PokemonCard({ name, url }: Props) {
   }
 
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.info}>
-        <Text style={styles.name}>{name}</Text>
+    <Link
+      href={{ pathname: "/[pokemon]", params: { pokemon: name } }}
+      style={{ flex: 1 }}
+      asChild
+    >
+      <Pressable style={styles.wrapper}>
+        <View style={[styles.info]}>
+          <Text style={styles.name}>{name}</Text>
 
-        <Text style={styles.id}>#{data.id}</Text>
-      </View>
+          <Text style={styles.id}>#{data.id}</Text>
+        </View>
 
-      <Image
-        source={{
-          uri: data.sprites.other["official-artwork"].front_default,
-        }}
-        style={styles.image}
-      />
+        <Image
+          source={{
+            uri: data.sprites.other["official-artwork"].front_default,
+          }}
+          style={[styles.image]}
+          width={200}
+          height={200}
+        />
 
-      <PolemonTypes types={data.types} />
-    </View>
+        <PolemonTypes types={data.types} />
+      </Pressable>
+    </Link>
   );
 }
 
