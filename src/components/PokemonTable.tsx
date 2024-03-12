@@ -5,21 +5,46 @@ import {
   Text,
   View,
 } from "react-native";
-import { Pokemons } from "../types";
+import { PokemonType, Pokemons } from "../types";
 import { PokemonCard } from "./PokemonCard";
-import { useQuery } from "../hooks/useQuery";
+import { useState } from "react";
+import Picker from "react-native-picker-select";
+import { POKEMON_TYPES } from "../const/pokemonTypes";
+import { useQuery } from "@tanstack/react-query";
 
 const POKEMON_API_URL = "https://pokeapi.co/api/v2/pokemon";
 
 export function PokemonTable() {
-  const { data, loading, error, setData } = useQuery<Pokemons>({
-    url: POKEMON_API_URL,
+  const { data, isPending, isError } = useQuery<Pokemons>({
+    queryKey: ["pokemons"],
+    queryFn: () => fetch(POKEMON_API_URL).then((res) => res.json()),
+    refetchOnMount: false,
   });
 
-  if (loading) {
+  const [selectedType, setSelectedType] = useState<PokemonType | "all" | null>(
+    "all"
+  );
+
+  const selectTypes = [
+    { label: "All", value: "all" },
+    ...POKEMON_TYPES.map((type) => ({
+      label: type[0].toUpperCase() + type.slice(1),
+      value: type,
+    })),
+  ];
+
+  if (isPending) {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size={"large"} />
+      </View>
+    );
+  }
+
+  if (isError) {
+    return (
+      <View style={styles.centered}>
+        <Text>Error</Text>
       </View>
     );
   }
@@ -35,35 +60,44 @@ export function PokemonTable() {
   }
 
   async function onEndReached() {
-    if (!data?.next) return null;
-
-    try {
-      const response = await fetch(data.next);
-      const nextPokemonsData: Pokemons = await response.json();
-
-      const mergedResults = [...data.results, ...nextPokemonsData.results];
-
-      setData({
-        ...data,
-        results: mergedResults,
-        next: nextPokemonsData.next,
-        previous: nextPokemonsData.previous,
-      });
-    } catch (error) {
-      console.log("Error fetching next page", error);
-    }
+    // if (!data?.next) return null;
+    // try {
+    //   const response = await fetch(data.next);
+    //   const nextPokemonsData: Pokemons = await response.json();
+    //   const mergedResults = [...data.results, ...nextPokemonsData.results];
+    //   setData({
+    //     ...data,
+    //     results: mergedResults,
+    //     next: nextPokemonsData.next,
+    //     previous: nextPokemonsData.previous,
+    //   });
+    // } catch (error) {
+    //   console.log("Error fetching next page", error);
+    // }
   }
 
   return (
-    <FlatList
-      data={data.results}
-      renderItem={({ item }) => <PokemonCard {...item} />}
-      keyExtractor={({ name }) => name}
-      contentContainerStyle={styles.gap}
-      columnWrapperStyle={styles.gap}
-      numColumns={2}
-      onEndReached={onEndReached}
-    />
+    <View>
+      <View>
+        <Picker
+          items={selectTypes}
+          onValueChange={(value) => setSelectedType(value)}
+          value={selectedType}
+        />
+      </View>
+
+      <FlatList
+        data={data.results}
+        renderItem={({ item }) => (
+          <PokemonCard {...item} selectedType={selectedType} />
+        )}
+        keyExtractor={({ name }) => name}
+        contentContainerStyle={styles.gap}
+        columnWrapperStyle={styles.gap}
+        numColumns={2}
+        onEndReached={onEndReached}
+      />
+    </View>
   );
 }
 

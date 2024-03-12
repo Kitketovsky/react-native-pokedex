@@ -7,20 +7,32 @@ import {
   StyleSheet,
   Pressable,
 } from "react-native";
-import { useQuery } from "../hooks/useQuery";
 import { PolemonTypes } from "./PokemonTypes";
-import { Pokemon } from "../types";
+import { Pokemon, PokemonType } from "../types";
 import { Link } from "expo-router";
+import { useQuery } from "@tanstack/react-query";
 
 interface Props {
   name: string;
   url: string;
+  selectedType: PokemonType | "all" | null;
 }
 
-export function PokemonCard({ name, url }: Props) {
-  const { loading, data, error } = useQuery<Pokemon>({ url });
+export function PokemonCard({ name, url, selectedType }: Props) {
+  const { isPending, data, isError } = useQuery<Pokemon>({
+    queryKey: ["pokemon", name],
+    queryFn: async () => {
+      const response = await fetch(url);
 
-  if (loading || !data) {
+      if (!response.ok) {
+        throw new Error("Networl error");
+      }
+
+      return await response.json();
+    },
+  });
+
+  if (isPending) {
     return (
       <View style={{ flex: 1, minHeight: 200 }}>
         <Text>{name}</Text>
@@ -30,6 +42,26 @@ export function PokemonCard({ name, url }: Props) {
         </View>
       </View>
     );
+  }
+
+  if (isError) {
+    return (
+      <View style={{ flex: 1 }}>
+        <Text>Error</Text>
+      </View>
+    );
+  }
+
+  const pokemonTypes = data.types.map(({ slot, type }) => type.name);
+
+  const show =
+    selectedType === "all" ||
+    !selectedType ||
+    pokemonTypes.includes(selectedType);
+
+  // TODO: items that are not rendered also take place in FlatList
+  if (!show) {
+    return null;
   }
 
   return (
