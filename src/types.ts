@@ -30,6 +30,30 @@ export interface Pokemon {
   types: { slot: number; type: { name: PokemonType; url: string } }[];
   id: number;
   stats: Stat[];
+  abilities: Ability[];
+  cries: { latest: string; legacy: string };
+}
+
+interface Short {
+  name: string;
+  url: string;
+}
+
+export interface Ability {
+  ability: Short;
+  is_hidden: boolean;
+  slot: number;
+}
+
+export interface PokemonAbility {
+  id: number;
+  name: string;
+  names: { name: string; language: Short }[];
+  effect_entries: {
+    effect: string;
+    short_effect: string;
+    language: Short;
+  }[];
 }
 
 export type PokemonType =

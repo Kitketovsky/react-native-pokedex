@@ -1,4 +1,4 @@
-import { FlatList, View, Text, Image } from "react-native";
+import { FlatList, View, Text, Image, StyleSheet } from "react-native";
 import { Pokemon } from "../types";
 import { PokemonStat } from "./PokemonStat";
 
@@ -6,6 +6,7 @@ export function PokemonStats({ data }: { data: Pokemon["stats"] }) {
   return (
     <FlatList
       data={data}
+      style={styles.list}
       keyExtractor={(item) => item.stat.name}
       numColumns={3}
       contentContainerStyle={{ gap: 20 }}
@@ -14,3 +15,7 @@ export function PokemonStats({ data }: { data: Pokemon["stats"] }) {
     />
   );
 }
+
+const styles = StyleSheet.create({
+  list: { paddingVertical: 20 },
+});

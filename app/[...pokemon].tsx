@@ -1,3 +1,4 @@
+import { PokemonAbilities } from "@/src/components/PokemonAbilities";
 import { PokemonStats } from "@/src/components/PokemonStats";
 import { Pokemon } from "@/src/types";
 import { useQueryClient } from "@tanstack/react-query";
@@ -23,8 +24,9 @@ export default function PokemonPage() {
   ]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View>
       <PokemonStats data={pokemonData?.stats || []} />
+      <PokemonAbilities data={pokemonData?.abilities || []} />
     </View>
   );
 }
