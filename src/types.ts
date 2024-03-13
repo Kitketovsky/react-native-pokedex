@@ -5,6 +5,20 @@ export interface Pokemons {
   results: { name: string; url: string }[];
 }
 
+type StatName =
+  | "hp"
+  | "attack"
+  | "defense"
+  | "speed"
+  | "special-attack"
+  | "special-defense";
+
+export interface Stat {
+  base_stat: number;
+  effort: number;
+  stat: { name: StatName; url: string };
+}
+
 export interface Pokemon {
   sprites: {
     other: {
@@ -15,6 +29,7 @@ export interface Pokemon {
   };
   types: { slot: number; type: { name: PokemonType; url: string } }[];
   id: number;
+  stats: Stat[];
 }
 
 export type PokemonType =

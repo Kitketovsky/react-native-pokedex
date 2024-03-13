@@ -5,33 +5,35 @@ import {
   Text,
   View,
 } from "react-native";
-import { PokemonType, Pokemons } from "../types";
+import type { PokemonType, Pokemons } from "../types";
 import { PokemonCard } from "./PokemonCard";
-import { useState } from "react";
+import React, { useState } from "react";
 import Picker from "react-native-picker-select";
 import { POKEMON_TYPES } from "../const/pokemonTypes";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { TYPE_COLORS } from "../const/pokemonTypeColors";
 
 const POKEMON_API_URL = "https://pokeapi.co/api/v2/pokemon";
 
 export function PokemonTable() {
-  const { data, isPending, isError } = useQuery<Pokemons>({
-    queryKey: ["pokemons"],
-    queryFn: () => fetch(POKEMON_API_URL).then((res) => res.json()),
-    refetchOnMount: false,
-  });
+  const { data, isPending, isError, fetchNextPage, hasNextPage, isFetching } =
+    useInfiniteQuery<Pokemons>({
+      queryKey: ["pokemons"],
+      // @ts-ignore
+      queryFn: ({ pageParam }) => fetch(pageParam).then((res) => res.json()),
+      refetchOnMount: false,
+      initialPageParam: POKEMON_API_URL,
+      getNextPageParam: (lastPage, pages) => lastPage.next,
+    });
 
-  const [selectedType, setSelectedType] = useState<PokemonType | "all" | null>(
-    "all"
-  );
+  const queryClient = useQueryClient();
 
-  const selectTypes = [
-    { label: "All", value: "all" },
-    ...POKEMON_TYPES.map((type) => ({
-      label: type[0].toUpperCase() + type.slice(1),
-      value: type,
-    })),
-  ];
+  const [selectedType, setSelectedType] = useState<PokemonType | null>(null);
+
+  const selectTypes = POKEMON_TYPES.map((type) => ({
+    label: type[0].toUpperCase() + type.slice(1),
+    value: type,
+  }));
 
   if (isPending) {
     return (
@@ -59,35 +61,32 @@ export function PokemonTable() {
     );
   }
 
-  async function onEndReached() {
-    // if (!data?.next) return null;
-    // try {
-    //   const response = await fetch(data.next);
-    //   const nextPokemonsData: Pokemons = await response.json();
-    //   const mergedResults = [...data.results, ...nextPokemonsData.results];
-    //   setData({
-    //     ...data,
-    //     results: mergedResults,
-    //     next: nextPokemonsData.next,
-    //     previous: nextPokemonsData.previous,
-    //   });
-    // } catch (error) {
-    //   console.log("Error fetching next page", error);
-    // }
-  }
+  const flatListData = data.pages.map(({ results }) => results).flat();
 
   return (
     <View>
-      <View>
+      <View style={styles.filterContainer}>
+        <Text>Type:</Text>
+
         <Picker
           items={selectTypes}
           onValueChange={(value) => setSelectedType(value)}
           value={selectedType}
+          style={{
+            inputIOSContainer: {
+              backgroundColor: !selectedType
+                ? "#eee"
+                : TYPE_COLORS[selectedType],
+              borderRadius: 5,
+              paddingVertical: 10,
+              paddingHorizontal: 12,
+            },
+          }}
         />
       </View>
 
       <FlatList
-        data={data.results}
+        data={flatListData}
         renderItem={({ item }) => (
           <PokemonCard {...item} selectedType={selectedType} />
         )}
@@ -95,7 +94,11 @@ export function PokemonTable() {
         contentContainerStyle={styles.gap}
         columnWrapperStyle={styles.gap}
         numColumns={2}
-        onEndReached={onEndReached}
+        onEndReached={() => {
+          if (hasNextPage && !isFetching) {
+            fetchNextPage();
+          }
+        }}
       />
     </View>
   );
@@ -104,4 +107,5 @@ export function PokemonTable() {
 const styles = StyleSheet.create({
   centered: { flex: 1, justifyContent: "center", alignContent: "center" },
   gap: { gap: 10 },
+  filterContainer: { gap: 6, paddingVertical: 12 },
 });

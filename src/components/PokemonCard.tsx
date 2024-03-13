@@ -15,7 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 interface Props {
   name: string;
   url: string;
-  selectedType: PokemonType | "all" | null;
+  selectedType: PokemonType | null;
 }
 
 export function PokemonCard({ name, url, selectedType }: Props) {
@@ -54,10 +54,7 @@ export function PokemonCard({ name, url, selectedType }: Props) {
 
   const pokemonTypes = data.types.map(({ slot, type }) => type.name);
 
-  const show =
-    selectedType === "all" ||
-    !selectedType ||
-    pokemonTypes.includes(selectedType);
+  const show = !selectedType || pokemonTypes.includes(selectedType);
 
   // TODO: items that are not rendered also take place in FlatList
   if (!show) {
