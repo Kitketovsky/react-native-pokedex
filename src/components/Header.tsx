@@ -3,13 +3,15 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export function Header() {
   const { navigate } = useRouter();
-  const _ = usePathname();
+  const pathname = usePathname();
 
   return (
     <View style={styles.container}>
-      <Pressable style={styles.back} onPress={() => navigate("/")}>
-        <Text style={{ color: "white" }}>Back</Text>
-      </Pressable>
+      {pathname !== "/" && (
+        <Pressable style={styles.button} onPress={() => navigate("/")}>
+          <Text style={styles.buttonText}>Back</Text>
+        </Pressable>
+      )}
 
       <Text style={styles.heading}>Pokewiki</Text>
     </View>
@@ -23,11 +25,16 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   heading: { textAlign: "center", fontSize: 20, fontWeight: "bold" },
-  back: {
+  button: {
     position: "absolute",
     left: 0,
-    padding: 20,
     borderRadius: 15,
     backgroundColor: "black",
+    overflow: "hidden",
+  },
+  buttonText: {
+    color: "white",
+    paddingHorizontal: 20,
+    paddingVertical: 14,
   },
 });
