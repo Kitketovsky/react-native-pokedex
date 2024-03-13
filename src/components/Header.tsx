@@ -20,7 +20,7 @@ export function Header() {
 
 const styles = StyleSheet.create({
   container: {
-    height: 70,
+    height: 60,
     justifyContent: "center",
     position: "relative",
   },

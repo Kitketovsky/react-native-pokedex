@@ -8,8 +8,8 @@ import {
 import { Slot, SplashScreen } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,8 +22,6 @@ onlineManager.setEventListener((setOnline) => {
 });
 
 export default function MainLayout() {
-  const insets = useSafeAreaInsets();
-
   useEffect(() => {
     SplashScreen.hideAsync();
   }, []);
@@ -31,19 +29,20 @@ export default function MainLayout() {
   //  TODO: load fonts here
 
   return (
-    <QueryClientProvider client={client}>
-      <View style={[styles.container, insets]}>
+    <SafeAreaView style={[styles.container]}>
+      <QueryClientProvider client={client}>
         <Header />
         <Slot />
         <StatusBar style="auto" />
-      </View>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
+    overflow: "hidden",
   },
 });

@@ -2,7 +2,7 @@ export const POKEMON_TYPES = [
   "normal",
   "fire",
   "water",
-  "eletric",
+  "electric",
   "grass",
   "ice",
   "fighting",

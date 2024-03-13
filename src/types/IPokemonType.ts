@@ -2,7 +2,7 @@ export type IPokemonType =
   | "normal"
   | "fire"
   | "water"
-  | "eletric"
+  | "electric"
   | "grass"
   | "ice"
   | "fighting"

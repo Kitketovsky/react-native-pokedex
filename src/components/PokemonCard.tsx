@@ -16,10 +16,9 @@ import { IPokemon } from "../types/IPokemon";
 interface Props {
   name: string;
   url: string;
-  selectedType: IPokemonType | null;
 }
 
-export function PokemonCard({ name, url, selectedType }: Props) {
+export function PokemonCard({ name, url }: Props) {
   const { isPending, data, isError } = useQuery<IPokemon>({
     queryKey: ["pokemon", name],
     queryFn: async () => {
@@ -51,15 +50,6 @@ export function PokemonCard({ name, url, selectedType }: Props) {
         <Text>Error</Text>
       </View>
     );
-  }
-
-  const pokemonTypes = data.types.map(({ slot, type }) => type.name);
-
-  const show = !selectedType || pokemonTypes.includes(selectedType);
-
-  // TODO: items that are not rendered also take place in FlatList
-  if (!show) {
-    return null;
   }
 
   return (
