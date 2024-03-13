@@ -1,25 +1,24 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import type { Pokemon, PokemonAbility } from "../types";
 import { useQuery } from "@tanstack/react-query";
 
-export function PokemonAbility({
-  item,
-  index,
-}: {
+interface Props {
   item: Pokemon["abilities"][number];
   index: number;
-}) {
+}
+
+export function PokemonAbility({ item }: Props) {
   const { data, isPending, isError } = useQuery<PokemonAbility>({
     queryKey: ["ability", item.ability.name],
     queryFn: () => fetch(item.ability.url).then((res) => res.json()),
   });
 
   if (isPending) {
-    return <Text>Loading...</Text>;
+    return <ActivityIndicator style={{ paddingVertical: 20 }} size={"small"} />;
   }
 
   if (isError) {
-    return <Text>Error...</Text>;
+    return null;
   }
 
   return (

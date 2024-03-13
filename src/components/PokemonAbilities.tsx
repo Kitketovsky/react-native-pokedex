@@ -1,26 +1,23 @@
-import { FlatList, StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { Pokemon } from "../types";
 import { PokemonAbility } from "./PokemonAbility";
 
 export function PokemonAbilities({ data }: { data: Pokemon["abilities"] }) {
   return (
-    <FlatList
-      style={styles.list}
-      data={data}
-      renderItem={(data) => <PokemonAbility {...data} />}
-      ListHeaderComponent={
-        <View>
-          <Text
-            style={{ textAlign: "center", fontWeight: "bold", fontSize: 18 }}
-          >
-            Abilities
-          </Text>
-        </View>
-      }
-    />
+    <View style={styles.wrapper}>
+      <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 18 }}>
+        Abilities
+      </Text>
+
+      <View>
+        {data.map((ability, index) => (
+          <PokemonAbility key={index} item={ability} index={index} />
+        ))}
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  list: { paddingVertical: 20 },
+  wrapper: { paddingVertical: 20 },
 });
