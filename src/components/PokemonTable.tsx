@@ -5,19 +5,20 @@ import {
   Text,
   View,
 } from "react-native";
-import type { PokemonType, Pokemons } from "../types";
 import { PokemonCard } from "./PokemonCard";
 import React, { useState } from "react";
 import Picker from "react-native-picker-select";
 import { POKEMON_TYPES } from "../const/pokemonTypes";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { TYPE_COLORS } from "../const/pokemonTypeColors";
+import { IPokemons } from "../types/IPokemons";
+import { IPokemonType } from "../types/IPokemonType";
 
 const POKEMON_API_URL = "https://pokeapi.co/api/v2/pokemon";
 
 export function PokemonTable() {
   const { data, isPending, isError, fetchNextPage, hasNextPage, isFetching } =
-    useInfiniteQuery<Pokemons>({
+    useInfiniteQuery<IPokemons>({
       queryKey: ["pokemons"],
       // @ts-ignore
       queryFn: ({ pageParam }) => fetch(pageParam).then((res) => res.json()),
@@ -28,7 +29,7 @@ export function PokemonTable() {
 
   const queryClient = useQueryClient();
 
-  const [selectedType, setSelectedType] = useState<PokemonType | null>(null);
+  const [selectedType, setSelectedType] = useState<IPokemonType | null>(null);
 
   const selectTypes = POKEMON_TYPES.map((type) => ({
     label: type[0].toUpperCase() + type.slice(1),

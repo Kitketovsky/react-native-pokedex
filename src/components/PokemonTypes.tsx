@@ -1,8 +1,9 @@
 import { StyleSheet, View, Text } from "react-native";
-import { Pokemon } from "../types";
-import { TYPE_COLORS } from "../const/pokemonTypeColors";
 
-export function PolemonTypes({ types }: { types: Pokemon["types"] }) {
+import { TYPE_COLORS } from "../const/pokemonTypeColors";
+import { IPokemon } from "../types/IPokemon";
+
+export function PolemonTypes({ types }: { types: IPokemon["types"] }) {
   return (
     <View style={styles.wrapper}>
       {[...new Set(types)].map(({ type }) => (

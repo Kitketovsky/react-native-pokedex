@@ -8,18 +8,19 @@ import {
   Pressable,
 } from "react-native";
 import { PolemonTypes } from "./PokemonTypes";
-import { Pokemon, PokemonType } from "../types";
 import { Link } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
+import { IPokemonType } from "../types/IPokemonType";
+import { IPokemon } from "../types/IPokemon";
 
 interface Props {
   name: string;
   url: string;
-  selectedType: PokemonType | null;
+  selectedType: IPokemonType | null;
 }
 
 export function PokemonCard({ name, url, selectedType }: Props) {
-  const { isPending, data, isError } = useQuery<Pokemon>({
+  const { isPending, data, isError } = useQuery<IPokemon>({
     queryKey: ["pokemon", name],
     queryFn: async () => {
       const response = await fetch(url);

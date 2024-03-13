@@ -1,8 +1,8 @@
 import { StyleSheet, View, Text } from "react-native";
-import { Pokemon } from "../types";
 import { PokemonAbility } from "./PokemonAbility";
+import { IPokemon } from "../types/IPokemon";
 
-export function PokemonAbilities({ data }: { data: Pokemon["abilities"] }) {
+export function PokemonAbilities({ data }: { data: IPokemon["abilities"] }) {
   return (
     <View style={styles.wrapper}>
       <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 18 }}>

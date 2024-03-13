@@ -1,14 +1,15 @@
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import type { Pokemon, PokemonAbility } from "../types";
 import { useQuery } from "@tanstack/react-query";
+import { IPokemon } from "../types/IPokemon";
+import { IPokemonAbility } from "../types/IPokemonAbility";
 
 interface Props {
-  item: Pokemon["abilities"][number];
+  item: IPokemon["abilities"][number];
   index: number;
 }
 
 export function PokemonAbility({ item }: Props) {
-  const { data, isPending, isError } = useQuery<PokemonAbility>({
+  const { data, isPending, isError } = useQuery<IPokemonAbility>({
     queryKey: ["ability", item.ability.name],
     queryFn: () => fetch(item.ability.url).then((res) => res.json()),
   });

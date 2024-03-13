@@ -1,10 +1,10 @@
 import { PokemonAbilities } from "@/src/components/PokemonAbilities";
 import { PokemonSprites } from "@/src/components/PokemonSprites";
 import { PokemonStats } from "@/src/components/PokemonStats";
-import { Pokemon } from "@/src/types";
+import { IPokemon } from "@/src/types/IPokemon";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
-import { ScrollView, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 export default function PokemonPage() {
   const { pokemon } = useLocalSearchParams();
@@ -19,7 +19,7 @@ export default function PokemonPage() {
     );
   }
 
-  const pokemonData = queryClient.getQueryData<Pokemon>([
+  const pokemonData = queryClient.getQueryData<IPokemon>([
     "pokemon",
     ...pokemon,
   ]);

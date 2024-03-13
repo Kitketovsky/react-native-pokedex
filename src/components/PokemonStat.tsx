@@ -1,5 +1,5 @@
 import { View, Text, Image, StyleSheet } from "react-native";
-import { Stat } from "../types";
+import { IPokemonStat } from "../types/IPokemonStat";
 
 const STATS_ICONS = {
   hp: require("./../../assets/icons/heart.png"),
@@ -10,7 +10,7 @@ const STATS_ICONS = {
   speed: require("./../../assets/icons/speed.png"),
 };
 
-export function PokemonStat({ data }: { data: Stat }) {
+export function PokemonStat({ data }: { data: IPokemonStat }) {
   return (
     <View style={styles.wrapper}>
       <Text>{data.base_stat}</Text>

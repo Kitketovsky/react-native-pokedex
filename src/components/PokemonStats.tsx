@@ -1,8 +1,8 @@
-import { FlatList, View, Text, Image, StyleSheet } from "react-native";
-import { Pokemon } from "../types";
+import { FlatList, StyleSheet } from "react-native";
 import { PokemonStat } from "./PokemonStat";
+import { IPokemon } from "../types/IPokemon";
 
-export function PokemonStats({ data }: { data: Pokemon["stats"] }) {
+export function PokemonStats({ data }: { data: IPokemon["stats"] }) {
   return (
     <FlatList
       data={data}

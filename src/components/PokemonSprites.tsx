@@ -1,7 +1,5 @@
-import { View, Text, Image, Pressable, StyleSheet } from "react-native";
-import { Pokemon } from "../types";
-import { useEffect, useState } from "react";
-import { PokemonStats } from "./PokemonStats";
+import { View, Image, StyleSheet } from "react-native";
+import { IPokemon } from "../types/IPokemon";
 
 function getSpritesLinks(data: Record<string, {} | string | null>) {
   const result: { key: string; url: string }[] = [];
@@ -23,7 +21,7 @@ function getSpritesLinks(data: Record<string, {} | string | null>) {
   return result;
 }
 
-export function PokemonSprites({ data }: { data?: Pokemon["sprites"] }) {
+export function PokemonSprites({ data }: { data?: IPokemon["sprites"] }) {
   if (!data) {
     return null;
   }

@@ -1,7 +1,6 @@
-// import { PokemonType } from "../types";
 import { POKEMON_TYPES } from "./pokemonTypes";
 
-type PokemonType = typeof POKEMON_TYPES[number]
+type PokemonType = (typeof POKEMON_TYPES)[number];
 
 export const TYPE_COLORS = {
   normal: "#A8A878",
